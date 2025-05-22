@@ -1,0 +1,11 @@
+# 忽略 Python 缓存
+__pycache__/
+*.pyc
+
+# 忽略日志和记录文件
+printed_emails.txt
+failed_certificates.xlsx
+
+# 忽略隐藏系统文件
+.DS_Store
+Thumbs.db
