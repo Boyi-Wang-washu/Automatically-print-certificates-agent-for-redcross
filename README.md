@@ -1,30 +1,31 @@
 # 🧾 Red Cross Certificate Printing Agent
 
-这是一个用于批量打印美国红十字会（Red Cross）培训证书的自动化系统。只需将学员名单 Excel 文件放入项目文件夹，程序即可自动打开 Red Cross 官网，筛选有效证书并完成勾选与下载，支持断点续打、失败导出。
+这是一个用于批量打印美国红十字会（Red Cross）培训证书的自动化系统。程序可自动识别最新的 Excel 学员名单文件，批量搜索证书并完成筛选、勾选和下载操作，适合 Enrollware / Red Cross 平台配合使用。
 
 ---
 
 ## ✅ 功能亮点
 
-- 📂 **自动识别学员 Excel 文件**（无需改文件名，每周只需替换 Excel 即可）
-- 📧 按照 Last Name 顺序自动读取每位学员邮箱
-- 🧠 筛选逻辑包括：
+- 📂 自动识别当前文件夹中**最新的 Excel 表格**
+- 📧 依据 `First Name` 排序批量处理学员邮箱
+- 🧠 智能筛选符合以下条件的证书：
   - 状态必须为 `Valid`
   - 完成时间必须为 **2025年及以后**
-  - 课程名称不能包含 `online`
-- 🖱️ 自动执行勾选 → 尺寸选择（11 x 8.5）→ 点击下载
-- 💾 自动跳过已处理邮箱（断点续打）
-- ❌ 自动导出失败记录为 `failed_certificates.xlsx`
+  - 课程名称不包含 `online`
+- 📥 自动勾选 + 尺寸选择（11'' x 8.5''）+ 点击下载
+- ⏯ 支持断点续打（中断后可继续）
+- ❌ 打印失败记录将自动导出为 `failed_certificates.xlsx`
 
 ---
 
 ## 🗂 项目结构说明
+
 redcross_agent/
 ├── print_certificates.py # 主程序（运行此文件）
-├── 学员表格.xlsx # 任意命名，只需放在目录中即可被识别
-├── printed_emails.txt # 自动生成：已成功打印邮箱记录
-├── failed_certificates.xlsx # 自动生成：未成功打印的学员名单
-├── .gitignore # 忽略上传的缓存和记录文件
+├── 任意命名的学员表格.xlsx # 每周更新（程序将自动选取最新文件）
+├── printed_emails.txt # 自动生成：已成功打印邮箱
+├── failed_certificates.xlsx # 自动生成：未成功打印的邮箱名单
+├── .gitignore # Git 忽略上传的缓存文件
 ├── README.md # 项目说明文件（当前）
 
 
@@ -36,32 +37,46 @@ redcross_agent/
 
 1. 安装 Python：https://www.python.org/
 2. 安装依赖：
-
-```bash
 pip install pandas selenium openpyxl
-
-下载 ChromeDriver 并放到本地，在 print_certificates.py 中设置路径：
+3. 下载 ChromeDriver
+放入本地路径，并修改代码中：
 chrome_driver_path = r"C:\路径\chromedriver.exe"
 
-📤 每次使用流程
-将你这周的学员 Excel 表格（例如 5.19-5.25.xlsx）拖进项目文件夹
+📤 每次打印流程
+1. 将你这周的学员 Excel 表格放入项目文件夹
 
-双击或运行 print_certificates.py：
+2. 确保该 Excel 文件是“最后修改”的（或只留当前文件在目录中）
 
-程序会自动选择最新的 Excel 文件作为输入
+3. 打开终端，运行：
+python print_certificates.py
+程序将自动识别最新 Excel → 按 First Name 顺序处理 → 批量执行打印
 
-可随时 Ctrl + C 中断，后续运行会从断点继续
+4. 可随时按 Ctrl + C 中断，系统将保存当前进度并跳过已完成邮箱
 
-所有失败打印的邮箱将导出到 failed_certificates.xlsx
+♻️ 如何重置程序重新打印新表格
+如果你想开始打印新的表格（而不是接着上次失败名单）：
 
-🧯 补打印提示
-运行结束后请检查：
+✅ 执行以下操作：
+1. 删除或重命名 printed_emails.txt 文件
+删除它，程序将视为首次运行
+或重命名为 printed_emails_5.12.txt 保存为历史记录
 
-✅ printed_emails.txt：包含所有成功处理过的邮箱（系统自动跳过）
+2. 替换新表格并重新运行程序即可完成“重置打印”
 
-❌ failed_certificates.xlsx：包含处理失败的邮箱和信息（可用于手动处理或二次导入）
+🧯 补打说明
+运行结束后建议检查：
 
-由 Boyi Wang 开发，用于 Gosvea Inc. 实习自动化项目，适用于 Enrollware、Red Cross 平台证书归档打印场景。
+✅ printed_emails.txt：所有成功处理过的邮箱（系统自动跳过）
+
+❌ failed_certificates.xlsx：未能成功打印的学员（可再次运行处理）
+
+由 Boyi Wang 开发，用于 Gosvea Inc. 实习项目，提升 Red Cross 证书打印流程自动化效率。
+
+
+
+
+
+
 
 
 
