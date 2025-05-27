@@ -14,7 +14,15 @@ chrome_driver_path = r"C:\Users\10846\Desktop\AI Agent实用工具\chromedriver-
 checkpoint_file = "printed_emails.txt"
 
 # === 读取 Excel 并提取邮箱 ===
-df = pd.read_excel("Students to be printed 5.12-5.18.xlsx")
+excel_files = [f for f in os.listdir() if f.endswith(".xlsx") and not f.startswith("~") and "failed" not in f]
+if not excel_files:
+    print("❌ 未找到任何可用的 Excel 文件，请将学员名单放在当前文件夹并确保为 .xlsx 格式。")
+    exit()
+
+# 默认选择最新修改的 Excel 文件
+excel_file = max(excel_files, key=os.path.getmtime)
+print(f"📥 当前使用的 Excel 文件：{excel_file}")
+df = pd.read_excel(excel_file)
 df_sorted = df.sort_values(by="Last Name")
 email_list = df_sorted["Email"].dropna().tolist()
 
@@ -133,5 +141,6 @@ if failed_emails:
     print("✅ 已导出未成功打印的学员信息至 failed_certificates.xlsx")
 else:
     print("\n✅ 所有邮箱均已成功处理！")
+
 
 
