@@ -23,7 +23,7 @@ if not excel_files:
 excel_file = max(excel_files, key=os.path.getmtime)
 print(f"📥 当前使用的 Excel 文件：{excel_file}")
 df = pd.read_excel(excel_file)
-df_sorted = df.sort_values(by="Last Name")
+df_sorted = df.sort_values(by="First Name")
 email_list = df_sorted["Email"].dropna().tolist()
 
 # === 跳过已完成邮箱 ===
